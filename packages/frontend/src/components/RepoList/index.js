@@ -7,12 +7,52 @@ const languageColors = {
   TypeScript: '#2b7489',
   HTML: '#e34c26',
   CSS: '#563d7c',
+  Python: '#4372A1',
+  PHP: '#515E91',
+  Ruby: '#671D1A',
   shell: '#89e051',
-  other: '#949494',
 };
+
+const List = styled.ul`
+  list-style: none;
+`;
+
+const Language = styled.div`
+  ::before {
+    content: '';
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 7.5px;
+    background-color: ${props => props.color || '#949494'};
+    margin-right: 0.3em;
+  }
+`;
+
+const Button = styled.button``;
+
 const RepoList = props => {
-  // @TODO
-  throw new Error('Implement the repo list according to the layout');
+  return (
+    <section>
+      <h1>{props.username} - repos</h1>
+      <List>
+        {props.data.map(repo => (
+          <li key={repo.id}>
+            <a href={repo.html_url}>
+              <h2>{repo.name}</h2>
+            </a>
+            <div>{repo.description}</div>
+            <Language color={languageColors[repo.language]}>
+              {repo.language || 'Unknown'}
+            </Language>
+          </li>
+        ))}
+      </List>
+      {!props.isLastPage && (
+        <Button onClick={props.fetchMore}>Load More</Button>
+      )}
+    </section>
+  );
 };
 
 RepoList.propTypes = {
@@ -21,6 +61,7 @@ RepoList.propTypes = {
     shape({
       id: number,
       name: string,
+      description: string,
       html_url: string,
       language: string,
     }),

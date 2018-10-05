@@ -6,6 +6,7 @@ const initialState = {
   data: [],
   nextPage: null,
   isLastPage: false,
+  octoResponse: null,
 };
 
 export default (state = initialState, action) => {
@@ -24,10 +25,16 @@ export default (state = initialState, action) => {
         error: action.error,
       };
     }
-    // @TODO: Implement FETCH_SUCCESS handler. On success, you should apply proper loading/error
-    // states, and adjust the other data/variables needed for the container in containers/RepoList
     case FETCH_SUCCESS: {
-      throw new Error('Not implemented');
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        data: action.data,
+        nextPage: action.nextPage,
+        octoResponse: action.octoResponse,
+        isLastPage: !action.nextPage,
+      };
     }
     default:
       return state;
