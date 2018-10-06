@@ -16,14 +16,23 @@
     "type": "git",
     "url": "git+https://github.com/motleyagency/code-challenge.git"
   },
-  "keywords": ["challenge", "interview", "react", "graphql", "rest", "test"],
+  "keywords": [
+    "challenge",
+    "interview",
+    "react",
+    "graphql",
+    "rest",
+    "test"
+  ],
   "author": "Pete Nykänen <pete@motley.fi>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/motleyagency/code-challenge/issues"
   },
   "homepage": "https://motley.fi",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.16.3"
+  },
   "lint-staged": {
     "*.{js,json,graphql,md,css,scss,less,ts}": [
       "prettier --single-quote --trailing-comma all --write",
