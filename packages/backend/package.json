@@ -31,7 +31,10 @@
   },
   "homepage": "https://motley.fi",
   "dependencies": {
-    "express": "^4.16.3"
+    "apollo-server": "^2.1.0",
+    "apollo-server-express": "^2.1.0",
+    "express": "^4.16.3",
+    "graphql": "^14.0.2"
   },
   "lint-staged": {
     "*.{js,json,graphql,md,css,scss,less,ts}": [

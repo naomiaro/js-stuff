@@ -1,15 +1,59 @@
-// @TODO:
-// - Server runs on port 4848 (because reasons...)
-// - `/api/users` endpoint serves all the data under `data/data.json` with status code 200
-// - `/api/users/${id}` endpoint serves a single user data by ID
-// - `/api/users/xxx` serves 404 Not Found, as do all the other paths
-// - BONUS: Add GraphQL and GraphiQL endpoints for bonus
-
 const express = require('express');
-const data = require('./data/data');
+const { ApolloServer, gql } = require('apollo-server-express');
 
+const data = require('./data/data');
 const PORT = 4848;
 const app = express();
+
+const typeDefs = gql`
+  type Geo {
+    lat: String
+    lng: String
+  }
+
+  type Company {
+    name: String
+    catchPhrase: String
+    bs: String
+  }
+
+  type Address {
+    street: String
+    suite: String
+    city: String
+    zipcode: String
+    geo: Geo
+  }
+
+  type User {
+    id: Int
+    name: String
+    username: String
+    email: String
+    address: Address
+    phone: String
+    website: String
+    company: Company
+  }
+
+  type Query {
+    user(id: Int): User
+    users: [User]
+  }
+`;
+
+const resolvers = {
+  Query: {
+    user: (parent, args, context, info) => {
+      return data.find(user => user.id === args.id);
+    },
+    users: () => data,
+  },
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+server.applyMiddleware({ app });
 
 app.get('/api/users', function(req, res) {
   res.json(data);
@@ -30,4 +74,6 @@ app.get('/*', function(req, res) {
   res.sendStatus(404);
 });
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+app.listen({ port: PORT }, () =>
+  console.log(`🚀 Server ready at http://localhost:${PORT}`),
+);
