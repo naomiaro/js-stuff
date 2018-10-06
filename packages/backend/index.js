@@ -16,8 +16,14 @@ app.get('/api/users', function(req, res) {
 });
 
 app.get('/api/users/:id', function(req, res) {
-  const id = req.params.id;
-  res.json(data[id]);
+  const id = Number(req.params.id);
+  const user = data.find(user => user.id === id);
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 app.get('/*', function(req, res) {
