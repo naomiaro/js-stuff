@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
-import { connect, Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import RepoList from './containers/RepoList';
 import ErrorBoundary from './components/ErrorBoundary';

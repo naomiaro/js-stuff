@@ -1,11 +1,9 @@
 import parseLinkHeaders from 'parse-link-header';
-import Octokit from '@octokit/rest';
+import 'isomorphic-fetch';
 
 export const FETCH_START = '@fetch/start';
 export const FETCH_ERROR = '@fetch/error';
 export const FETCH_SUCCESS = '@fetch/success';
-
-const octokit = new Octokit();
 
 const fetchStart = () => ({
   type: FETCH_START,
@@ -16,11 +14,10 @@ const fetchError = error => ({
   error,
 });
 
-const fetchSuccess = ({ nextPage, data, octoResponse }) => ({
+const fetchSuccess = ({ nextPage, data }) => ({
   type: FETCH_SUCCESS,
   nextPage,
   data,
-  octoResponse,
 });
 
 /**
@@ -32,23 +29,18 @@ export const fetchUserRepos = username => async (dispatch, getState) => {
 
   try {
     const { RepoList } = getState();
-    let octoResponse;
+    const url =
+      RepoList.nextPage ||
+      `https://api.github.com/users/${username}/repos?type=owner&per_page=5`;
 
-    if (RepoList.octoResponse) {
-      octoResponse = await octokit.getNextPage(RepoList.octoResponse);
-    } else {
-      octoResponse = await octokit.repos.getForUser({
-        username,
-        type: 'owner',
-        per_page: 5,
-      });
-    }
+    const response = await fetch(url);
+    const links = parseLinkHeaders(response.headers.get('Link'));
+    const data = await response.json();
 
     dispatch(
       fetchSuccess({
-        octoResponse,
-        nextPage: octokit.hasNextPage(octoResponse),
-        data: RepoList.data.concat(octoResponse.data),
+        data,
+        nextPage: links.next ? links.next.url : null,
       }),
     );
   } catch (error) {

@@ -29,12 +29,12 @@ const Language = styled.div`
   }
 `;
 
-const Button = styled.button``;
+export const Button = styled.button``;
 
 const RepoList = props => {
   return (
     <section>
-      <h1>{props.username} - repos</h1>
+      <h1>{props.username} – repos</h1>
       <List>
         {props.data.map(repo => (
           <li key={repo.id}>

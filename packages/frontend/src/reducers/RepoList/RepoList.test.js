@@ -1,8 +1,20 @@
 import reducer from './';
-import { FETCH_SUCCESS } from '../../actions';
+import { FETCH_START, FETCH_SUCCESS } from '../../actions';
 
 it('should return the initialState', () => {
-  throw new Error('Not implemented');
+  const action = { type: 'wrong' };
+
+  const initialState = {
+    loading: true,
+    error: null,
+    data: [],
+    nextPage: null,
+    isLastPage: false,
+  };
+
+  const result = reducer();
+
+  expect(result).toEqual(initialState);
 });
 
 it('should append to the data array with FETCH_SUCCESS', () => {
@@ -24,5 +36,17 @@ it('should append to the data array with FETCH_SUCCESS', () => {
 });
 
 it('should set isLastPage to true if nextPage is null', () => {
-  throw new Error('Not implemented');
+  const action = { type: FETCH_SUCCESS, data: [3, 4], nextPage: null };
+
+  const initialState = {
+    loading: true,
+    error: null,
+    data: [1, 2],
+    nextPage: 'http://fake',
+    isLastPage: false,
+  };
+
+  const result = reducer(initialState, action);
+
+  expect(result.isLastPage).toEqual(true);
 });

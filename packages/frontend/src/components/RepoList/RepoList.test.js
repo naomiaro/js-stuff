@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import RepoList from './';
+import RepoList, { Button } from './';
 
 /**
  * These tests are pretty naive on purpose
@@ -34,27 +34,61 @@ beforeEach(() => {
 });
 
 it('renders a title', () => {
-  const title /* @TODO Get the title */ = expect(title.text()).toEqual(
-    'petetnt – repos',
-  );
+  const title = Elem.find('h1');
+
+  expect(title.text()).toEqual('petetnt – repos');
 });
 
 it('renders a repo names', () => {
-  const names /* @TODO Get the reoo name */ = expect(names.length).toEqual(2);
+  const names = Elem.find('h2');
+  expect(names.length).toEqual(2);
   expect(names.at(0).text()).toEqual('Test');
   expect(names.at(1).text()).toEqual('Test 2');
 });
 
 it('renders repo names as a link', () => {
-  throw new Error('test not implemented');
+  const nameLinks = Elem.find('a');
+  expect(nameLinks.length).toEqual(2);
+  expect(nameLinks.at(0).text()).toEqual('Test');
+  expect(nameLinks.at(1).text()).toEqual('Test 2');
 });
 
-it('renders load more button if there is more to load', () => {
-  const button = Elem.find(Button);
+describe('When isLastPage false', () => {
+  beforeEach(() => {
+    Elem = mount(
+      <RepoList
+        data={data}
+        username="petetnt"
+        fetchMore={jest.fn()}
+        isLastPage={false}
+      />,
+    );
+  });
 
-  expect(button.length).toEqual(1);
+  it('renders the load more button', () => {
+    const button = Elem.find(Button);
+
+    expect(button.length).toEqual(1);
+  });
 });
 
-it('does not renders load more button if there is nothing to load', () => {
-  throw new Error('test not implemented');
+describe('When isLastPage true', () => {
+  let Elem = null;
+
+  beforeEach(() => {
+    Elem = mount(
+      <RepoList
+        data={data}
+        username="petetnt"
+        fetchMore={jest.fn()}
+        isLastPage={true}
+      />,
+    );
+  });
+
+  it('does not render the load more button', () => {
+    const button = Elem.find(Button);
+
+    expect(button.length).toEqual(0);
+  });
 });

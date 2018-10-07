@@ -6,10 +6,9 @@ const initialState = {
   data: [],
   nextPage: null,
   isLastPage: false,
-  octoResponse: null,
 };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action = {}) => {
   switch (action.type) {
     case FETCH_START: {
       return {
@@ -30,9 +29,8 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
-        data: action.data,
+        data: state.data.concat(action.data),
         nextPage: action.nextPage,
-        octoResponse: action.octoResponse,
         isLastPage: !action.nextPage,
       };
     }

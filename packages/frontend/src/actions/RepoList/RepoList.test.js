@@ -5,12 +5,19 @@ import { FETCH_START, fetchUserRepos } from './';
 import mockData from './__mocks__/data';
 
 const mockStore = configureMockStore([thunk]);
+const username = 'naomiaro';
 
-const username = 'petetnt';
-
-// @TODO - Configure fetchMock to reply with mockData for queries to
-// https://api.github.com/users/${username}/repos endpoint
-fetchMock.get(/**/);
+fetchMock.get(
+  `https://api.github.com/users/${username}/repos?type=owner&per_page=5`,
+  {
+    body: mockData,
+    status: 200,
+    headers: {
+      Link:
+        '<https://api.github.com/user/35253/repos?type=owner&per_page=5&page=2>; rel="next", <https://api.github.com/user/35253/repos?type=owner&per_page=5&page=6>; rel="last"',
+    },
+  },
+);
 
 const store = mockStore({
   RepoList: {
@@ -29,6 +36,8 @@ test('fetching repos first sets state to loading', async () => {
 });
 
 test('successful fetch sets nextPage to Link header value', async () => {
-  // @TODO: implement this test
-  throw new Error('Not implemented (actions/RepoList/RepoList.test.js)');
+  await store.dispatch(fetchUserRepos(username));
+  expect(store.getActions().pop().nextPage).toEqual(
+    'https://api.github.com/user/35253/repos?type=owner&per_page=5&page=2',
+  );
 });
