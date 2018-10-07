@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import RepoList, { Button } from './';
+import RepoList, { Button, Header } from './';
 
 /**
  * These tests are pretty naive on purpose
@@ -34,7 +34,7 @@ beforeEach(() => {
 });
 
 it('renders a title', () => {
-  const title = Elem.find('h1');
+  const title = Elem.find(Header);
 
   expect(title.text()).toEqual('petetnt – repos');
 });
@@ -50,7 +50,13 @@ it('renders repo names as a link', () => {
   const nameLinks = Elem.find('a');
   expect(nameLinks.length).toEqual(2);
   expect(nameLinks.at(0).text()).toEqual('Test');
+  expect(nameLinks.at(0).prop('href')).toEqual(
+    'https://github.com/motleyagency/test',
+  );
   expect(nameLinks.at(1).text()).toEqual('Test 2');
+  expect(nameLinks.at(1).prop('href')).toEqual(
+    'https://github.com/motleyagency/test2',
+  );
 });
 
 describe('When isLastPage false', () => {

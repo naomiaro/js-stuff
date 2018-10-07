@@ -1,6 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { injectGlobal } from 'styled-components';
+import reset from 'styled-reset';
 import { number, string, shape, arrayOf, func, bool } from 'prop-types';
+
+injectGlobal`
+  ${reset}
+`;
 
 const languageColors = {
   JavaScript: '#f1e05a',
@@ -13,11 +18,31 @@ const languageColors = {
   shell: '#89e051',
 };
 
-const List = styled.ul`
-  list-style: none;
+export const Header = styled.h1`
+  font-size: 25px;
+  font-weight: bold;
 `;
 
-const Language = styled.div`
+export const List = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+export const ListItem = styled.li`
+  margin-top: 20px;
+`;
+
+export const Link = styled.a``;
+
+export const Name = styled.h2`
+  font-size: 20px;
+`;
+
+export const Description = styled.div`
+  margin: 10px 0;
+`;
+
+export const Language = styled.div`
   ::before {
     content: '';
     display: inline-block;
@@ -29,29 +54,38 @@ const Language = styled.div`
   }
 `;
 
-export const Button = styled.button``;
+export const Button = styled.button`
+  margin: 30px 0;
+  font-size: 20px;
+  padding: 5px;
+  cursor: pointer;
+`;
+
+export const Listing = styled.section`
+  margin-left: 40px;
+`;
 
 const RepoList = props => {
   return (
-    <section>
-      <h1>{props.username} – repos</h1>
+    <Listing>
+      <Header>{props.username} – repos</Header>
       <List>
         {props.data.map(repo => (
-          <li key={repo.id}>
-            <a href={repo.html_url}>
-              <h2>{repo.name}</h2>
-            </a>
-            <div>{repo.description}</div>
+          <ListItem key={repo.id}>
+            <Link href={repo.html_url}>
+              <Name>{repo.name}</Name>
+            </Link>
+            <Description>{repo.description}</Description>
             <Language color={languageColors[repo.language]}>
               {repo.language || 'Unknown'}
             </Language>
-          </li>
+          </ListItem>
         ))}
       </List>
       {!props.isLastPage && (
         <Button onClick={props.fetchMore}>Load More</Button>
       )}
-    </section>
+    </Listing>
   );
 };
 
